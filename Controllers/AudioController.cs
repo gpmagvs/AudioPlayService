@@ -24,9 +24,9 @@ namespace AudioPlayService.Controllers
         }
 
         [HttpPost("PlayAudio")]
-        public async Task<IActionResult> PlayAudio(string audioFilePath)
+        public async Task<IActionResult> PlayAudio(string audioFilePath, double duration = 1)
         {
-            bgService.PlayAudioStandalone(audioFilePath);
+            bgService.PlayAudioStandalone(audioFilePath, duration);
             return Ok();
         }
 

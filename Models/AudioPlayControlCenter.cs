@@ -63,31 +63,22 @@ namespace AudioPlayService.Models
             }
         }
 
-        internal async Task PlayAudioStandalone(string audioFilePath)
+        internal async Task PlayAudioStandalone(string audioFilePath, double audioDuration = 1)
         {
             _ = Task.Run(async () =>
             {
 
+                Console.WriteLine($"[PlayAudioStandalone] Now playing: {audioFilePath},duration={audioDuration} sec");
                 WaveOutEvent waveout = await PlayAudioOnce(audioFilePath);
                 if (playingStandaloneWavesList.TryAdd(audioFilePath, waveout))
                 {
                     await Task.Delay(100);
-                    while (waveout != null)
-                    {
-                        while (waveout.PlaybackState == PlaybackState.Playing)
-                        {
-                            await Task.Delay(10);
-                        }
-                        waveout.Dispose();
-                        await Task.Delay(10);
-                        if (!playingStandaloneWavesList.ContainsKey(audioFilePath))
-                            return;
 
-                        await Task.Delay(500);
-                        waveout = await PlayAudioOnce(audioFilePath);
-                        playingStandaloneWavesList[audioFilePath] = waveout;
-                        waveout.Play();
-                    }
+                    waveout = await PlayAudioOnce(audioFilePath);
+                    playingStandaloneWavesList[audioFilePath] = waveout;
+                    waveout.Play();
+                    await Task.Delay(TimeSpan.FromSeconds(audioDuration));
+                    waveout.Dispose();
                 }
 
             });
