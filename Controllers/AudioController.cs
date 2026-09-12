@@ -15,6 +15,15 @@ namespace AudioPlayService.Controllers
             this.bgService = bgService;
         }
 
+        [HttpGet]
+        [Route("/")]
+        public async Task<IActionResult> Get()
+        {
+            //just for alive check
+            return Ok(new { message = "Audio Play Service is running." });
+
+        }
+
 
         [HttpGet("Information")]
         public async Task<IActionResult> GetInformation()
